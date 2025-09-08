@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -14,9 +15,9 @@ export default function Home() {
         </div>
         
         <nav className="hidden md:flex space-x-8">
-          <a href="#" className="text-gray-800 hover:text-blue-500 font-medium">Home</a>
-          <a href="#" className="text-gray-600 hover:text-blue-500">Catálogo</a>
-          <a href="#" className="text-gray-600 hover:text-blue-500">Perfil</a>
+          <Link href="/" className="text-gray-800 hover:text-blue-500 font-medium">Home</Link>
+          <Link href="/catalogo" className="text-gray-600 hover:text-blue-500">Catálogo</Link>
+          <Link href="/perfil" className="text-gray-600 hover:text-blue-500">Perfil</Link>
         </nav>
 
         <button className="md:hidden flex flex-col space-y-1">
@@ -37,12 +38,12 @@ export default function Home() {
               Encontre suas próximas aventuras cinematográficas com facilidade 
               e praticidade em nosso catálogo completo.
             </p>
-            <button className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-full font-medium transition-colors duration-300 flex items-center space-x-2 mx-auto md:mx-0">
+            <Link href="/catalogo" className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-full font-medium transition-colors duration-300 flex items-center space-x-2 mx-auto md:mx-0 w-fit">
               <span>Ver Catálogo</span>
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
-            </button>
+            </Link>
           </div>
           
           <div className="flex-1 order-first md:order-last">
