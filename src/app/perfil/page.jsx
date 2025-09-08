@@ -19,6 +19,7 @@ export default function Perfil() {
                     <Link href="/" className="text-gray-600 hover:text-blue-500">Home</Link>
                     <Link href="/catalogo" className="text-gray-600 hover:text-blue-500">Catálogo</Link>
                     <Link href="/perfil" className="text-gray-800 hover:text-blue-500 font-medium">Perfil</Link>
+                    <Link href="/intro" className="text-gray-600 hover:text-yellow-500">Introdução</Link>
                 </nav>
 
                 <button className="md:hidden flex flex-col space-y-1">
