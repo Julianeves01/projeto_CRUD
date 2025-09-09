@@ -7,6 +7,9 @@ import Image from "next/image";
 export default function Header() {
     const pathname = usePathname();
     const [tema, setTema] = useState('light');
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState({ text: '', icon: '' });
+    const [progress, setProgress] = useState(100);
 
     const isActive = (path) => pathname === path;
 
@@ -83,6 +86,33 @@ export default function Header() {
         body.style.transition = 'background-color 0.3s ease, color 0.3s ease';
     };
 
+    const showThemeToast = (theme) => {
+        const message = theme === 'dark' ? 'Modo Escuro Ativado' : 'Modo Claro Ativado';
+        const icon = theme === 'dark' ? '🌙' : '☀️';
+        setToastMessage({ text: message, icon });
+        setShowToast(true);
+        setProgress(100);
+        
+        
+        const duration = 4000; 
+        const interval = 50; 
+        const decrement = 100 / (duration / interval);
+        
+        const progressInterval = setInterval(() => {
+            setProgress(prev => {
+                const newProgress = prev - decrement;
+                if (newProgress <= 0) {
+                    clearInterval(progressInterval);
+                    setShowToast(false);
+                    return 0;
+                }
+                return newProgress;
+            });
+        }, interval);
+
+        return () => clearInterval(progressInterval);
+    };
+
     const alternarTema = () => {
         try {
             const novoTema = tema === 'light' ? 'dark' : 'light';
@@ -94,15 +124,17 @@ export default function Header() {
             
             aplicarTema(novoTema);
             setTema(novoTema);
+            showThemeToast(novoTema);
         } catch (error) {
             console.error('Erro ao alterar tema:', error);
         }
     };
 
     return (
-        <header className={`flex justify-between items-center p-4 md:p-6 shadow-sm transition-colors duration-300 ${
-            tema === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-600'
-        }`}>
+        <>
+            <header className={`flex justify-between items-center p-4 md:p-6 shadow-sm transition-colors duration-300 ${
+                tema === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-600'
+            }`}>
             <div className="flex items-center">
                 <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
                     <span className="text-white font-bold text-sm">CB</span>
@@ -169,6 +201,55 @@ export default function Header() {
                 <div className={`w-6 h-0.5 ${tema === 'dark' ? 'bg-gray-300' : 'bg-gray-600'}`}></div>
                 <div className={`w-6 h-0.5 ${tema === 'dark' ? 'bg-gray-300' : 'bg-gray-600'}`}></div>
             </button>
-        </header>
+            </header>
+
+            {/* Toast Notification */}
+            {showToast && (
+                <div 
+                    className={`fixed top-20 right-4 z-50 rounded-xl shadow-xl transform transition-all duration-500 ease-out overflow-hidden ${
+                        tema === 'dark' 
+                            ? 'bg-gray-900 text-white border border-gray-700' 
+                            : 'bg-white text-gray-800 border border-gray-100'
+                    } ${showToast ? 'translate-y-0 opacity-100 scale-100' : '-translate-y-4 opacity-0 scale-95'}`}
+                    style={{
+                        backdropFilter: 'blur(12px)',
+                        background: tema === 'dark' 
+                            ? 'rgba(17, 24, 39, 0.95)' 
+                            : 'rgba(255, 255, 255, 0.95)',
+                        boxShadow: tema === 'dark'
+                            ? '0 10px 25px rgba(0, 0, 0, 0.5)'
+                            : '0 10px 25px rgba(0, 0, 0, 0.1)',
+                        minWidth: '300px'
+                    }}
+                >
+                    {/* Conteúdo do Toast */}
+                    <div className="px-5 py-4 flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                            <span className="text-xl">{toastMessage.icon}</span>
+                            <span className="text-sm font-medium tracking-wide">{toastMessage.text}</span>
+                        </div>
+                        <button 
+                            onClick={() => setShowToast(false)}
+                            className={`p-1.5 rounded-full transition-colors duration-200 ${
+                                tema === 'dark' ? 'hover:bg-gray-800' : 'hover:bg-gray-100'
+                            }`}
+                            title="Fechar"
+                        >
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    {/* Barra de Progresso */}
+                    <div className={`h-1 ${tema === 'dark' ? 'bg-gray-800' : 'bg-gray-200'}`}>
+                        <div 
+                            className="h-full bg-gradient-to-r from-blue-500 to-blue-400 transition-all duration-100 ease-linear"
+                            style={{ width: `${progress}%` }}
+                        ></div>
+                    </div>
+                </div>
+            )}
+        </>
     );
 }

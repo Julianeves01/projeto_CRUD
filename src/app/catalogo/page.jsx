@@ -8,16 +8,49 @@ export default function Catalogo() {
     const [filmes, setFilmes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filmesFiltered, setFilmesFiltered] = useState([]);
 
     useEffect(() => {
         fetchFilmes();
     }, []);
+
+    useEffect(() => {
+        filterFilmes();
+    }, [filmes, searchTerm]);
+
+    const filterFilmes = () => {
+        if (!searchTerm) {
+            setFilmesFiltered(filmes);
+            return;
+        }
+
+        const filtered = filmes.filter(filme => {
+            const title = filme.title || '';
+            
+            const rangeMatch = searchTerm.match(/^([A-Za-z])\s*-\s*([A-Za-z])$/);
+            if (rangeMatch) {
+                const [, startLetter, endLetter] = rangeMatch;
+                const firstChar = title.charAt(0).toUpperCase();
+                return firstChar >= startLetter.toUpperCase() && firstChar <= endLetter.toUpperCase();
+            }
+            
+            return title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                   (filme.director && filme.director.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                   (filme.genres && filme.genres.some(genre => 
+                       genre.toLowerCase().includes(searchTerm.toLowerCase())
+                   ));
+        });
+        
+        setFilmesFiltered(filtered);
+    };
 
     const fetchFilmes = async () => {
         try {
             setLoading(true);
             const response = await axios.get('https://api.sampleapis.com/movies/animation');
             setFilmes(response.data);
+            setFilmesFiltered(response.data);
         } catch (err) {
             setError('Erro ao carregar filmes: ' + (err.message || 'Erro desconhecido'));
         } finally {
@@ -54,6 +87,74 @@ export default function Catalogo() {
                     </button>
                 </div>
             </main>
+        </div>
+    );
+
+    const renderSearchBar = () => (
+        <div className="mb-8">
+            <div className="max-w-md mx-auto relative">
+                <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg 
+                            className="h-5 w-5 text-gray-400" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                        >
+                            <path 
+                                strokeLinecap="round" 
+                                strokeLinejoin="round" 
+                                strokeWidth={2} 
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" 
+                            />
+                        </svg>
+                    </div>
+                    <input
+                        type="text"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        placeholder="Buscar filmes ou usar intervalo (ex: A-Z, R-T)..."
+                        className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                        style={{ 
+                            backgroundColor: 'var(--card-bg, #ffffff)',
+                            borderColor: 'var(--border-color, #d1d5db)',
+                            color: 'var(--foreground, #1f2937)'
+                        }}
+                    />
+                    {searchTerm && (
+                        <button
+                            onClick={() => setSearchTerm('')}
+                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                        >
+                            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    )}
+                </div>
+                
+                <div className="mt-3 flex flex-wrap gap-2 justify-center">
+                    {['A-F', 'G-M', 'N-S', 'T-Z'].map((range) => (
+                        <button
+                            key={range}
+                            onClick={() => setSearchTerm(range)}
+                            className={`px-3 py-1 text-sm rounded-full transition-all duration-200 ${
+                                searchTerm === range 
+                                    ? 'bg-blue-500 text-white' 
+                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                            }`}
+                        >
+                            {range}
+                        </button>
+                    ))}
+                </div>
+                
+                {searchTerm && (
+                    <div className="mt-2 text-center text-sm text-gray-500">
+                        {filmesFiltered.length} filme{filmesFiltered.length !== 1 ? 's' : ''} encontrado{filmesFiltered.length !== 1 ? 's' : ''}
+                    </div>
+                )}
+            </div>
         </div>
     );
 
@@ -177,6 +278,9 @@ export default function Catalogo() {
                     <p className="text-lg mb-4 transition-colors duration-300">
                         Descubra nossa incrível coleção de {filmes.length} filmes de animação!
                     </p>
+                    
+                    {renderSearchBar()}
+                    
                     <div className="flex items-center justify-center gap-2 text-sm transition-colors duration-300"
                         style={{ color: 'var(--text-muted, #6b7280)' }}>
                         <span>🎭</span>
@@ -185,14 +289,24 @@ export default function Catalogo() {
                     </div>
                 </div>
 
-                {filmes.length === 0 ? (
+                {filmesFiltered.length === 0 ? (
                     <div className="text-center py-20">
                         <span className="text-6xl mb-4 block">🎭</span>
-                        <p className="text-xl transition-colors duration-300">Nenhum filme encontrado</p>
+                        <p className="text-xl transition-colors duration-300">
+                            {searchTerm ? 'Nenhum filme encontrado para esta busca' : 'Nenhum filme encontrado'}
+                        </p>
+                        {searchTerm && (
+                            <button
+                                onClick={() => setSearchTerm('')}
+                                className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                            >
+                                Limpar busca
+                            </button>
+                        )}
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                        {filmes.map(renderFilmeCard)}
+                        {filmesFiltered.map(renderFilmeCard)}
                     </div>
                 )}
 
