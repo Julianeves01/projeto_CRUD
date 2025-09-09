@@ -2,34 +2,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './Perfil.module.css';
+import Header from '../../components/Header';
 
 export default function Perfil() {
     return (
         <div>
-            {/* Header com navegação */}
-            <header className="flex justify-between items-center p-4 md:p-6 bg-white shadow-sm">
-                <div className="flex items-center">
-                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                        <span className="text-white font-bold text-sm">CB</span>
-                    </div>
-                    <span className="ml-2 text-gray-600 text-sm">CineByte</span>
-                </div>
-                
-                <nav className="hidden md:flex space-x-8">
-                    <Link href="/" className="text-gray-600 hover:text-blue-500">Home</Link>
-                    <Link href="/catalogo" className="text-gray-600 hover:text-blue-500">Catálogo</Link>
-                    <Link href="/perfil" className="text-gray-800 hover:text-blue-500 font-medium">Perfil</Link>
-                    <Link href="/intro" className="text-gray-600 hover:text-yellow-500">Introdução</Link>
-                </nav>
+            <Header />
 
-                <button className="md:hidden flex flex-col space-y-1">
-                    <div className="w-6 h-0.5 bg-gray-600"></div>
-                    <div className="w-6 h-0.5 bg-gray-600"></div>
-                    <div className="w-6 h-0.5 bg-gray-600"></div>
-                </button>
-            </header>
-
-            {/* Conteúdo do perfil */}
             <div className={styles.container}>
                 <div className={styles.card}>
                     <Image src="/images/Minha-foto.jpg" alt="Minha foto" className={styles.image} width={200} height={200} priority />

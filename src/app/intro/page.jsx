@@ -1,34 +1,13 @@
 import styles from './intro.module.css';
 import Link from 'next/link';
+import Header from '../../components/Header';
 
 export default function Intro() {
     return (
         <div className={styles.pageContainer}>
-            {/* Header */}
-            <header className="flex justify-between items-center p-4 md:p-6 bg-white shadow-sm">
-                <div className="flex items-center">
-                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                        <span className="text-white font-bold text-sm">CB</span>
-                    </div>
-                    <span className="ml-2 text-gray-600 text-sm">CineByte</span>
-                </div>
-                
-                <nav className="hidden md:flex space-x-8">
-                    <Link href="/" className="text-gray-600 hover:text-blue-500">Home</Link>
-                    <Link href="/intro" className="text-gray-800 hover:text-yellow-500">Introdução</Link>
-                    <Link href="/catalogo" className="text-gray-600 hover:text-blue-500">Catálogo</Link>
-                    <Link href="/perfil" className="text-gray-600 hover:text-blue-500">Perfil</Link>
-                </nav>
-
-                <button className="md:hidden flex flex-col space-y-1">
-                    <div className="w-6 h-0.5 bg-gray-600"></div>
-                    <div className="w-6 h-0.5 bg-gray-600"></div>
-                    <div className="w-6 h-0.5 bg-gray-600"></div>
-                </button>
-            </header>
+            <Header />
 
             <div className={styles.mainContent}>
-                {/* Hero Section */}
                 <div className={styles.heroSection}>
                     <span className={styles.cinemaIcon}>🎬</span>
                     <h1 className={styles.heroTitle}>CONHEÇA A API</h1>
@@ -38,14 +17,12 @@ export default function Intro() {
                 </div>
 
                 <div className={styles.container}>
-                    {/* API Title Section */}
                     <h2 className={styles.apiTitle}>Sample APIs - Movies Animation</h2>
                     <p className={styles.apiDescription}>
                         Uma API completa que disponibiliza informações detalhadas sobre filmes de animação. 
                         Explore dados sobre diferentes títulos, características, diretores e muito mais para criar experiências incríveis.
                     </p>
 
-                    {/* Documentation Section */}
                     <div className={styles.documentationSection}>
                         <h3 className={styles.docTitle}>
                             📚 Documentação Oficial
@@ -63,7 +40,6 @@ export default function Intro() {
                         </a>
                     </div>
 
-                    {/* URL Information Grid */}
                     <div className={styles.infoGrid}>
                         <div className={styles.infoCard}>
                             <div className={styles.cardTitle}>
@@ -73,7 +49,7 @@ export default function Intro() {
                         </div>
                         <div className={styles.infoCard}>
                             <div className={styles.cardTitle}>
-                                � Endpoints Disponíveis
+                                🎬 Endpoints Disponíveis
                             </div>
                             <div className={styles.cardValue}>
                                 <div style={{ marginBottom: '0.5rem' }}>/movies/animation</div>
@@ -84,7 +60,6 @@ export default function Intro() {
                         </div>
                     </div>
 
-                    {/* Attributes Section */}
                     <div className={styles.attributesSection}>
                         <h3 className={styles.attributesTitle}>
                             ⚙️ Atributos da Resposta da API
@@ -121,7 +96,6 @@ export default function Intro() {
                         </div>
                     </div>
 
-                    {/* Description Section */}
                     <div className={styles.descriptionSection}>
                         <h3 className={styles.descriptionTitle}>
                             📖 Sobre a API
