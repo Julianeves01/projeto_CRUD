@@ -13,7 +13,7 @@
 }
 
 .titulo404 {
-    font-size: 8rem;
+    font-size: 6rem;
     font-weight: bold;
     color: #dc2626;
     margin: 0;
@@ -85,4 +85,13 @@
 
 .backLink:active, .aboutLink:active {
     transform: translateY(0);
+}
+
+.notFoundImage {
+    max-width: 200px;
+    width: 100%;
+    height: auto;
+    margin: 0 auto 20px auto;
+    border-radius: 10px;
+    display: block;
 }
