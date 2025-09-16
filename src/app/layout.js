@@ -1,19 +1,23 @@
-import "./globals.css";
-
-export const metadata = {
-  title: 'CineByte',
-  description: 'Descubra os melhores filmes e séries em nossa plataforma. Encontre suas próximas aventuras cinematográficas com facilidade e praticidade em nosso catálogo completo.',
-  icons: {
-    icon: '/icons/filmeIcon.png'
-  },
-};
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './globals.css';
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-br">
       <body>
         {children}
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </body>
     </html>
   );
