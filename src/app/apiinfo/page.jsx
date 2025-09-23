@@ -1,8 +1,8 @@
-import styles from './intro.module.css';
+import styles from './apiinfo.module.css';
 import Link from 'next/link';
 import Header from '../../components/Header';
 
-export default function Intro() {
+export default function ApiInfo() {
     return (
         <div className={styles.pageContainer}>
             <Header />

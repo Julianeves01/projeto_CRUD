@@ -153,8 +153,8 @@ export default function Header() {
                     Home
                 </Link>
                 <Link
-                    href="/intro"
-                    className={isActive('/intro') 
+                    href="/apiinfo"
+                    className={isActive('/apiinfo') 
                         ? `font-medium hover:text-yellow-500 ${tema === 'dark' ? 'text-white' : 'text-gray-800'}` 
                         : `hover:text-yellow-500 ${tema === 'dark' ? 'text-gray-300' : 'text-gray-600'}`
                     }
