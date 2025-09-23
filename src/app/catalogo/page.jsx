@@ -242,7 +242,7 @@ export default function Catalogo() {
                                         </div>
                                     )}
 
-                                    <Link href={`/animacoes/${filme.id}`}>
+                                    <Link href={`/animacoes/${filme.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`}>
                                         <button className="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium py-3.5 px-4 rounded-lg transition-all duration-200 flex items-center justify-center group border border-gray-800 hover:border-gray-700">
                                             <span className="mr-2 text-gray-400 group-hover:text-white transition-colors">▶</span>
                                             <span className="tracking-wide">VER DETALHES</span>

@@ -15,16 +15,36 @@ export default function FilmeDetails() {
 
     useEffect(() => {
         if (params.id) {
-            fetchFilme(params.id);
+            fetchFilmeBySlug(params.id);
         }
     }, [params.id]);
 
-    const fetchFilme = async (id) => {
+    // Função para converter slug de volta para título
+    const slugToTitle = (slug) => {
+        return slug.split('-').map(word => 
+            word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ');
+    };
+
+    // Função para criar slug a partir do título
+    const titleToSlug = (title) => {
+        return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    };
+
+    const fetchFilmeBySlug = async (slug) => {
         try {
             setLoading(true);
-            const response = await axios.get('https://api.sampleapis.com/movies/animation');
-            const filmeEncontrado = response.data.find(filme => filme.id === parseInt(id));
             
+            // Buscar todos os filmes
+            const response = await axios.get('https://api.sampleapis.com/movies/animation');
+            const filmes = response.data;
+            
+            // Encontrar o filme pelo slug
+            const filmeEncontrado = filmes.find(filme => {
+                const filmeSlug = titleToSlug(filme.title || '');
+                return filmeSlug === slug;
+            });
+
             if (filmeEncontrado) {
                 setFilme(filmeEncontrado);
                 
@@ -69,7 +89,7 @@ export default function FilmeDetails() {
     const getSinopseRealPorTitulo = (titulo) => {
         const sinopsesReais = {
             'Toy Story': {
-                sinopse: 'Woody, um cowboy de brinquedo, é o favorito do garoto Andy até que um novo brinquedo, Buzz Lightyear, chega e rouba sua atenção. Quando os dois se perdem durante uma mudança, precisam trabalhar juntos para voltar para casa, descobrindo o verdadeiro significado da amizade.',
+                sinopse: 'Woody, um cowboy de brinquedo, é o favorito do garoto Andy até que um novo brinquedo, Buzz Lightyear, chega e rouba sua atenção. Quando os dois se perrem durante uma mudança, precisam trabalhar juntos para voltar para casa, descobrindo o verdadeiro significado da amizade.',
                 rating: '8.3',
                 votes: '985,000'
             },
@@ -352,14 +372,6 @@ export default function FilmeDetails() {
                                 </div>
 
                                 <div className="space-y-6">
-                                    {filme.id && (
-                                        <div className="flex items-center">
-                                            <span className="text-lg mr-2">🆔</span>
-                                            <span className="font-semibold transition-colors duration-300">ID:</span>
-                                            <span className="ml-2 transition-colors duration-300">#{filme.id}</span>
-                                        </div>
-                                    )}
-
                                     {filme.year && (
                                         <div className="flex items-center">
                                             <span className="text-lg mr-2">📅</span>
