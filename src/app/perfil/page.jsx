@@ -23,22 +23,22 @@ export default function Perfil() {
                     <div className={styles.profileCard}>
                         <div className={styles.profileLeft}>
                             <div className={styles.imageContainer}>
-                                <Image 
-                                    src="/images/Minha-foto.jpg" 
-                                    alt="Julia Simões Neves" 
-                                    className={styles.profileImage} 
-                                    width={200} 
-                                    height={200} 
-                                    priority 
+                                <Image
+                                    src="/images/Minha-foto.jpg"
+                                    alt="Julia Simões Neves"
+                                    className={styles.profileImage}
+                                    width={200}
+                                    height={200}
+                                    priority
                                 />
                             </div>
                             <h2 className={styles.cardName}>Julia</h2>
                             <h3 className={styles.cardSurname}>Simões Neves</h3>
                             <p className={styles.cardRole}>DESENVOLVEDORA DE SISTEMAS</p>
-                            
+
                             <div className={styles.icons}>
                                 <a href="https://github.com/Julianeves01" target="_blank" rel="noopener noreferrer">
-                                    <Image src="/images/github-icon.png" alt="GitHub" className={styles.icon} width={32} height={32}/>
+                                    <Image src="/images/github-icon.png" alt="GitHub" className={styles.icon} width={32} height={32} />
                                 </a>
                                 <a href="https://instagram.com/julia.s.neves" target="_blank" rel="noopener noreferrer">
                                     <Image src="/images/instagram-icon.png" alt="Instagram" className={styles.icon} width={32} height={32} />
@@ -48,19 +48,19 @@ export default function Perfil() {
                                 </a>
                             </div>
                         </div>
-                        
+
                         <div className={styles.profileRight}>
                             <h1 className={styles.greeting}>Olá Visitante!</h1>
                             <p className={styles.subtitle}>Conheça meu perfil e meus projetos</p>
-                            
-                            
+
+
                             <div className={styles.description}>
                                 <p>
-                                     Sou uma Desenvolvedora em formação pelo SENAI - Turma 2TDS1. 
-                    Explorando o universo das APIs com um toque cinematográfico. Este projeto usa minha API de Filmes para mostrar uma coleção incrível de filmes — tudo com visual divertido e funcional. Explore meus projetos e confira meu perfil profissional clicando nos ícones abaixo 🎬
+                                    Sou uma Desenvolvedora em formação pelo SENAI - Turma 2TDS1.
+                                    Explorando o universo das APIs com um toque cinematográfico. Este projeto usa minha API de Filmes para mostrar uma coleção incrível de filmes — tudo com visual divertido e funcional. Explore meus projetos e confira meu perfil profissional clicando nos ícones abaixo 🎬
                                 </p>
                                 <p>
-                                   "A ciência de hoje é a tecnologia de amanhã." - Edward Teller
+                                    "A ciência de hoje é a tecnologia de amanhã." - Edward Teller
                                 </p>
                             </div>
                         </div>
