@@ -243,9 +243,17 @@ export default function Catalogo() {
                                     )}
 
                                     <Link href={`/animacoes/${filme.id}`}>
-                                        <button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center">
-                                            <span className="mr-2">🔍</span>
-                                            Explorar
+                                        <button className="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium py-3.5 px-4 rounded-lg transition-all duration-200 flex items-center justify-center group border border-gray-800 hover:border-gray-700">
+                                            <span className="mr-2 text-gray-400 group-hover:text-white transition-colors">▶</span>
+                                            <span className="tracking-wide">VER DETALHES</span>
+                                            <svg 
+                                                className="w-4 h-4 ml-2 opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-1 transition-all duration-200" 
+                                                fill="none" 
+                                                stroke="currentColor" 
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                            </svg>
                                         </button>
                                     </Link>
                                 </div>
