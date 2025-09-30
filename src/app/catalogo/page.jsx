@@ -276,23 +276,22 @@ export default function Catalogo() {
                     </div>
                 )}
 
-                {/* Estatísticas */}
                 <div className="mt-16 text-center">
                     <div className="inline-flex items-center gap-4 px-6 py-4 bg-gray-50 rounded-xl">
                         <div className="text-center">
                             <span className="text-2xl block">🎬</span>
                             <span className="text-sm font-semibold">{filmes.length}</span>
-                            <span className="text-xs text-gray-600">Filmes</span>
+                            <span className="text-xs text-gray-600"> Filmes</span>
                         </div>
                         <div className="text-center">
                             <span className="text-2xl block">🎭</span>
                             <span className="text-sm font-semibold">100%</span>
-                            <span className="text-xs text-gray-600">Animação</span>
+                            <span className="text-xs text-gray-600"> Animação</span>
                         </div>
                         <div className="text-center">
                             <span className="text-2xl block">⭐</span>
                             <span className="text-sm font-semibold">API</span>
-                            <span className="text-xs text-gray-600">Gratuita</span>
+                            <span className="text-xs text-gray-600"> Gratuita</span>
                         </div>
                     </div>
                 </div>
