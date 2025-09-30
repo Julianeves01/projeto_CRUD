@@ -509,6 +509,12 @@ export default function FilmeDetails() {
                                             Voltar ao Catálogo
                                         </button>
                                     </Link>
+                                    <Link href={`/animacoes/edit/${titleToSlug(filme.title)}`} className="flex-1">
+                                        <button className="w-full px-4 py-3 bg-pink-300 text-white rounded-lg hover:bg-yellow-600 transition-colors duration-200 font-semibold flex items-center justify-center">
+                                            <span className="mr-2">✏️</span>
+                                            Editar Filme
+                                        </button>
+                                    </Link>
                                     <Link href="/intro" className="flex-1">
                                         <button className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-semibold flex items-center justify-center">
                                             <span className="mr-2">📚</span>
