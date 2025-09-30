@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Header from '../../components/Header';
 import axios from 'axios';
+import { Pagination } from 'antd';
 
 export default function Catalogo() {
     const [filmes, setFilmes] = useState([]);
@@ -10,6 +11,8 @@ export default function Catalogo() {
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [filmesFiltered, setFilmesFiltered] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 20;
 
     useEffect(() => {
         fetchFilmes();
@@ -17,6 +20,7 @@ export default function Catalogo() {
 
     useEffect(() => {
         filterFilmes();
+        setCurrentPage(1); // volta para página 1 ao buscar
     }, [filmes, searchTerm]);
 
     const filterFilmes = () => {
@@ -163,6 +167,16 @@ export default function Catalogo() {
                         <span>Clique em "Explorar" para ver detalhes completos</span>
                         <span>🍿</span>
                     </div>
+                    {/* Paginação Ant Design */}
+                    <div className="flex justify-center mt-6">
+                        <Pagination
+                            current={currentPage}
+                            pageSize={pageSize}
+                            total={filmesFiltered.length}
+                            onChange={page => setCurrentPage(page)}
+                            showSizeChanger={false}
+                        />
+                    </div>
                 </div>
 
                 {filmesFiltered.length === 0 ? (
@@ -182,7 +196,7 @@ export default function Catalogo() {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                        {filmesFiltered.map((filme) => (
+                        {filmesFiltered.slice((currentPage - 1) * pageSize, currentPage * pageSize).map((filme) => (
                             <div key={filme.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300">
                                 <div className="relative h-80 bg-gradient-to-br from-blue-50 to-blue-100">
                                     {filme.posterURL ? (
