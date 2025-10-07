@@ -34,28 +34,58 @@ export default function FilmeDetails() {
     const fetchFilmeBySlug = async (slug) => {
         try {
             setLoading(true);
+            console.log('Buscando filme com slug:', slug);
             
-            // Buscar todos os filmes
-            const response = await axios.get('https://api.sampleapis.com/movies/animation');
-            const filmes = response.data;
+            // Primeiro, verificar se é um filme criado pelo usuário
+            const filmesCriados = sessionStorage.getItem('filmesCriados');
+            let filmeEncontrado = null;
             
-            // Encontrar o filme pelo slug
-            const filmeEncontrado = filmes.find(filme => {
-                const filmeSlug = titleToSlug(filme.title || '');
-                return filmeSlug === slug;
-            });
+            if (filmesCriados) {
+                const filmesCustom = JSON.parse(filmesCriados);
+                console.log('Filmes criados encontrados:', filmesCustom);
+                filmeEncontrado = filmesCustom.find(filme => {
+                    const filmeSlug = titleToSlug(filme.title || '');
+                    console.log('Comparando slugs:', filmeSlug, 'vs', slug);
+                    return filmeSlug === slug;
+                });
+                if (filmeEncontrado) {
+                    console.log('Filme criado encontrado:', filmeEncontrado);
+                }
+            }
+            
+            // Se não encontrou nos filmes criados, buscar na API
+            if (!filmeEncontrado) {
+                console.log('Filme não encontrado nos criados, buscando na API...');
+                const response = await axios.get('https://api.sampleapis.com/movies/animation');
+                const filmes = response.data;
+                
+                filmeEncontrado = filmes.find(filme => {
+                    const filmeSlug = titleToSlug(filme.title || '');
+                    return filmeSlug === slug;
+                });
+            }
 
             if (filmeEncontrado) {
                 setFilme(filmeEncontrado);
                 
-                // Busca sinopse real usando o IMDb ID
-                if (filmeEncontrado.imdbId) {
+                // Se for um filme da API (não criado pelo usuário), buscar sinopse real
+                if (filmeEncontrado.imdbId && !filmeEncontrado.isCustom) {
                     fetchSinopseReal(filmeEncontrado.imdbId, filmeEncontrado.title);
+                } else if (filmeEncontrado.isCustom) {
+                    // Para filmes criados pelo usuário, usar os dados que já temos
+                    setDetalhesExtras({
+                        overview: filmeEncontrado.plot,
+                        rating: filmeEncontrado.rating,
+                        votes: 'Filme criado por você',
+                        source: 'Criado pelo usuário'
+                    });
                 }
             } else {
+                console.log('Filme não encontrado em lugar nenhum');
                 setError('Filme não encontrado');
             }
         } catch (err) {
+            console.error('Erro ao buscar filme:', err);
             setError(err.response?.data?.message || err.message || 'Erro ao buscar dados do filme');
         } finally {
             setLoading(false);
@@ -372,7 +402,8 @@ export default function FilmeDetails() {
                                 </div>
 
                                 <div className="space-y-6">
-                                    {filme.year && (
+                                    {/* Só mostra ano se não for filme criado pelo usuário */}
+                                    {filme.year && !filme.isCustom && (
                                         <div className="flex items-center">
                                             <span className="text-lg mr-2">📅</span>
                                             <span className="font-semibold transition-colors duration-300">Ano de Lançamento:</span>
@@ -389,14 +420,19 @@ export default function FilmeDetails() {
                                                 <span className="text-yellow-600 font-bold text-lg">
                                                     {detalhesExtras.rating}/10
                                                 </span>
-                                                {detalhesExtras.votes && (
+                                                {detalhesExtras.votes && detalhesExtras.votes !== 'Filme criado por você' && (
                                                     <span className="ml-2 text-sm text-gray-500">
                                                         ({detalhesExtras.votes} votos)
                                                     </span>
                                                 )}
+                                                {detalhesExtras.votes === 'Filme criado por você' && (
+                                                    <span className="ml-2 text-sm text-green-600 font-medium">
+                                                        ✨ {detalhesExtras.votes}
+                                                    </span>
+                                                )}
                                             </div>
                                         </div>
-                                    ) : filme.year && (
+                                    ) : filme.year && !filme.isCustom && (
                                         <div className="flex items-center">
                                             <span className="text-lg mr-2">⭐</span>
                                             <span className="font-semibold transition-colors duration-300">Avaliação Estimada:</span>
@@ -411,7 +447,8 @@ export default function FilmeDetails() {
                                         </div>
                                     )}
 
-                                    {filme.genres && filme.genres.length > 0 && (
+                                    {/* Só mostra gêneros se não for filme criado pelo usuário OU se tiver gêneros diferentes do padrão */}
+                                    {filme.genres && filme.genres.length > 0 && !filme.isCustom && (
                                         <div>
                                             <div className="flex items-center mb-2">
                                                 <span className="text-lg mr-2">🎪</span>
@@ -430,7 +467,8 @@ export default function FilmeDetails() {
                                         </div>
                                     )}
 
-                                    {filme.director && (
+                                    {/* Só mostra diretor se não for filme criado pelo usuário OU se tiver diretor personalizado */}
+                                    {filme.director && !filme.isCustom && filme.director !== "Diretor não informado" && (
                                         <div className="flex items-start">
                                             <span className="text-lg mr-2 mt-1">🎬</span>
                                             <div>

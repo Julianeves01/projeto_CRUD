@@ -18,6 +18,16 @@ export default function Catalogo() {
         fetchFilmes();
     }, []);
 
+    // Recarregar filmes quando a página for focada (para mostrar novos filmes criados)
+    useEffect(() => {
+        const handleFocus = () => {
+            fetchFilmes();
+        };
+        
+        window.addEventListener('focus', handleFocus);
+        return () => window.removeEventListener('focus', handleFocus);
+    }, []);
+
     useEffect(() => {
         filterFilmes();
         setCurrentPage(1); // volta para página 1 ao buscar
@@ -53,7 +63,18 @@ export default function Catalogo() {
         try {
             setLoading(true);
             const response = await axios.get('https://api.sampleapis.com/movies/animation');
-            setFilmes(response.data);
+            let filmesAPI = response.data;
+            
+            // Buscar filmes criados pelo usuário no sessionStorage
+            const filmesCriados = sessionStorage.getItem('filmesCriados');
+            if (filmesCriados) {
+                const filmesCustom = JSON.parse(filmesCriados);
+                console.log('Filmes criados encontrados:', filmesCustom);
+                // Combinar filmes da API com filmes criados pelo usuário (filmes criados primeiro)
+                filmesAPI = [...filmesCustom, ...filmesAPI];
+            }
+            
+            setFilmes(filmesAPI);
         } catch (err) {
             setError('Erro ao carregar filmes: ' + (err.message || 'Erro desconhecido'));
         } finally {
@@ -177,6 +198,18 @@ export default function Catalogo() {
                             showSizeChanger={false}
                         />
                     </div>
+
+                    {/* Botão Criar Filme - Posicionado abaixo da paginação */}
+                    <div className="flex justify-start mt-6 mb-6 ml-8">
+                        <Link href="/animacoes/criar/novo">
+                            <button className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:from-pink-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-300">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                </svg>
+                                Criar Novo Filme
+                            </button>
+                        </Link>
+                    </div>
                 </div>
 
                 {filmesFiltered.length === 0 ? (
@@ -217,6 +250,18 @@ export default function Catalogo() {
                                         <span className="text-6xl mb-2">🎬</span>
                                         <span className="text-sm text-gray-500 text-center px-2">Sem pôster</span>
                                     </div>
+
+                                    {/* Badge para filmes criados pelo usuário */}
+                                    {filme.isCustom && (
+                                        <div className="absolute top-2 left-2">
+                                            <span className="px-2 py-1 bg-green-600 text-white rounded-full text-xs font-semibold flex items-center gap-1">
+                                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                                </svg>
+                                                Criado por você
+                                            </span>
+                                        </div>
+                                    )}
 
                                     {filme.year && (
                                         <div className="absolute top-2 right-2">

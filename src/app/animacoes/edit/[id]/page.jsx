@@ -34,9 +34,22 @@ export default function EditAnimacao() {
 
 	const fetchAnimacao = async (slug) => {
 		try {
-			const response = await axios.get("https://api.sampleapis.com/movies/animation");
-			const filmes = response.data;
-			const filmeEncontrado = filmes.find(filme => titleToSlug(filme.title || "") === slug);
+			// Primeiro, verificar se é um filme criado pelo usuário
+			const filmesCriados = sessionStorage.getItem('filmesCriados');
+			let filmeEncontrado = null;
+			
+			if (filmesCriados) {
+				const filmesCustom = JSON.parse(filmesCriados);
+				filmeEncontrado = filmesCustom.find(filme => titleToSlug(filme.title || "") === slug);
+			}
+			
+			// Se não encontrou nos filmes criados, buscar na API
+			if (!filmeEncontrado) {
+				const response = await axios.get("https://api.sampleapis.com/movies/animation");
+				const filmes = response.data;
+				filmeEncontrado = filmes.find(filme => titleToSlug(filme.title || "") === slug);
+			}
+			
 			if (filmeEncontrado) {
 				setForm({
 					title: filmeEncontrado.title || "",
@@ -77,6 +90,29 @@ export default function EditAnimacao() {
 				// Salva no sessionStorage
 				try {
 					const slug = params.id;
+					
+					// Verificar se é um filme criado pelo usuário e atualizar diretamente
+					const filmesCriados = sessionStorage.getItem('filmesCriados');
+					if (filmesCriados) {
+						const filmesCustom = JSON.parse(filmesCriados);
+						const index = filmesCustom.findIndex(filme => titleToSlug(filme.title || "") === slug);
+						if (index !== -1) {
+							// Atualizar filme criado pelo usuário
+							filmesCustom[index] = {
+								...filmesCustom[index],
+								title: form.title,
+								rating: form.rating,
+								plot: form.plot,
+								slug: titleToSlug(form.title)
+							};
+							sessionStorage.setItem('filmesCriados', JSON.stringify(filmesCustom));
+							toast.success("Filme criado por você foi atualizado!");
+							setTimeout(() => router.push("/catalogo"), 2000);
+							return;
+						}
+					}
+					
+					// Para filmes da API, salvar nas edições
 					let filmes = [];
 					const filmesStorage = sessionStorage.getItem('filmesEditados');
 					if (filmesStorage) {
